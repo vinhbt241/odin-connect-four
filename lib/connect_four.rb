@@ -12,26 +12,26 @@ class ConnectFour
     @player_won = false
     @victory_message = "TIE"
 
-    until board_full?(@board)
-      system 'clear'
-      display_board(@board)
-      choosen_col = -1
-      loop do
-        choosen_col = get_input().to_i - 1
-        break unless full_column?(@board, choosen_col)
-        puts "Invalid input, column is already full"
-      end
-      update_board(@board, @player_turn, choosen_col)
-      if player_won?(@board, choosen_col)
-        @victory_message = @player_turn == 1 ? "PLAYER 1 WON!" : "PLAYER 2 WON!"
-        break
-      end
-      switch_turn()
-    end
+    # until board_full?(@board)
+    #   system 'clear'
+    #   display_board(@board)
+    #   choosen_col = -1
+    #   loop do
+    #     choosen_col = get_input().to_i - 1
+    #     break unless full_column?(@board, choosen_col)
+    #     puts "Invalid input, column is already full"
+    #   end
+    #   update_board(@board, @player_turn, choosen_col)
+    #   if player_won?(@board, choosen_col)
+    #     @victory_message = @player_turn == 1 ? "PLAYER 1 WON!" : "PLAYER 2 WON!"
+    #     break
+    #   end
+    #   switch_turn()
+    # end
 
-    system 'clear'
-    display_board(@board)
-    puts @victory_message
+    # system 'clear'
+    # display_board(@board)
+    # puts @victory_message
   end
 
   def create_board()
@@ -133,7 +133,7 @@ class ConnectFour
   end
 end
 
-game = ConnectFour.new()
+# game = ConnectFour.new()
 
 
 
