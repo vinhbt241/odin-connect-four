@@ -1,5 +1,3 @@
-require 'colorize'
-
 class ConnectFour
   WHITE_CIRCLE = "○"
   BLACK_CIRCLE = "●"
