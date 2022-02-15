@@ -10,8 +10,9 @@ class ConnectFour
     @board = create_board()
     @player_turn = 1
     @player_won = false
+    @victory_message = "TIE"
 
-    until board_full?(@board) || player_won?(@board)
+    until board_full?(@board)
       system 'clear'
       display_board(@board)
       choosen_col = -1
@@ -21,8 +22,16 @@ class ConnectFour
         puts "Invalid input, column is already full"
       end
       update_board(@board, @player_turn, choosen_col)
+      if player_won?(@board, choosen_col)
+        @victory_message = @player_turn == 1 ? "PLAYER 1 WON!" : "PLAYER 2 WON!"
+        break
+      end
       switch_turn()
     end
+
+    system 'clear'
+    display_board(@board)
+    puts @victory_message
   end
 
   def create_board()
@@ -70,38 +79,56 @@ class ConnectFour
     true
   end
 
-  def player_won?(board)
-    cmp_circle_h = RED_CIRCLE
-    cmp_circle_v = RED_CIRCLE
-    count_h = 0
-    count_v = 0
-    count_d = 0
-    
-    board.each do |row|
-      row.each do |current_circle|
-        if cmp_circle_h == current_circle
-          count_h += 1
-        else
-          cmp_circle_h = current_circle unless current_circle == WHITE_CIRCLE
-          count_h = 1
-        end
-        return true if count_h == 4
-      end
+  def player_won?(board, col)
+    row = 0
+    while board[row][col] == WHITE_CIRCLE
+      row += 1
     end
 
-    # columns = board[0].length
-    # columns.times do |col|
-    #   board.each_index do |row|
-    #     if cmp_circle_v == board[row][col]
-    #       count_v += 1
-    #     else
-    #       cmp_circle_v = board[row][col] unless board[row][col] = WHITE_CIRCLE
-    #       count_v = 1
-    #     end
-    #     return true if count_v == 4
-    #   end
-    # end
-    
+    cmp_circle = board[row][col]
+
+    #Check horizontally
+    if col - 3 >= 0
+      return true if board[row][col - 3..col].all?(cmp_circle)
+    elsif col + 3 < 7
+      return true if board[row][col..col + 3].all?(cmp_circle)
+    end
+
+    #Check vertically
+    if row + 3 < 6
+      count_v = 1
+      current_row = row + 1
+      until current_row == row + 4
+        count_v += 1 if board[current_row][col] == cmp_circle
+        current_row += 1
+      end
+      return true if count_v == 4
+    end
+
+    #Check diagonal
+    count_d = 1
+
+    if row + 3 < 6 && col - 3 >= 0
+
+      current_r = row + 1
+      current_c = col - 1
+      until current_r == row + 4 && current_c == col - 4
+        count_d += 1 if board[current_r][current_c] == cmp_circle
+        current_r += 1
+        current_c -= 1
+      end
+      return true if count_d == 4
+    elsif row + 3 < 6 && col + 3 < 7
+      current_r = row + 1
+      current_c = col + 1
+      until current_r == row + 4 && current_c == col + 4
+        count_d += 1 if board[current_r][current_c] == cmp_circle
+        count_r += 1
+        count_c += 1
+      end
+      return true if count_d == 4
+    end
+
     false
   end
 end
